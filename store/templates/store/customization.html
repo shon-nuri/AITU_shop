@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Создай свой дизайн</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"></script>
+  <style>
+    #canvas-container {
+      width: 500px;
+      height: 500px;
+      border: 1px solid #ccc;
+      margin: 0 auto;
+      position: relative;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+    canvas {
+      background-image: url('https://via.placeholder.com/500x500?text=Футболка'); /* Пример фона */
+      background-size: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align: center;">Создай свой дизайн одежды</h2>
+  
+  <div id="canvas-container">
+    <canvas id="tshirt-canvas" width="500" height="500"></canvas>
+  </div>
+
+  <div class="controls">
+    <input type="file" id="upload-image" />
+    <button id="save-design">Сохранить</button>
+    <button id="delete-selected">Удалить выбранное</button>
+  </div>
+
+  <script>
+    const canvas = new fabric.Canvas('tshirt-canvas');
+
+    // Конфигурация для того, чтобы объекты можно было двигать, масштабировать и вращать
+    canvas.selection = true;
+
+    // Загрузка изображения на холст
+    document.getElementById('upload-image').addEventListener('change', function (e) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        fabric.Image.fromURL(event.target.result, function (img) {
+          img.set({
+            left: 100,
+            top: 100,
+            angle: 0, // Начальный угол
+            scaleX: 0.5,
+            scaleY: 0.5,
+            selectable: true, // Даем возможность выделять объект
+            borderColor: 'red',
+            cornerColor: 'green',
+            cornerSize: 10,
+            transparentCorners: false
+          });
+          canvas.add(img).setActiveObject(img);
+        });
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    });
+
+    // Удаление выбранного объекта
+    document.getElementById('delete-selected').addEventListener('click', function () {
+      const activeObject = canvas.getActiveObject();
+      if (activeObject) {
+        canvas.remove(activeObject);
+      }
+    });
+
+    // Сохранение дизайна в формате DataURL
+    document.getElementById('save-design').addEventListener('click', function () {
+      const dataURL = canvas.toDataURL();  // Получаем изображение в base64
+      console.log(dataURL); // Отправь это изображение на сервер
+
+      fetch('/save_design/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: new URLSearchParams({ 'image': dataURL }),
+      })
+      .then(response => response.json())
+      .then(data => alert(data.message))
+      .catch(error => console.error('Ошибка:', error));
+    });
+
+    // Обработчик изменения размера холста при изменении окна
+    window.addEventListener('resize', function () {
+      canvas.setWidth(500);
+      canvas.setHeight(500);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-6" id="payment-form-col">
+        <div class="box-element" id="form-wrapper">
+            <form id="payment-form">
+                {% csrf_token %}
+            
+                <div id="user-info">
+                    {% if request.user.is_authenticated %}
+                    <div class="form-field">
+                        <input 
+                            class="form-control" 
+                            type="text" 
+                            name="name" 
+                            value="{{ request.user.username }}" 
+                        >
+                    </div>
+                    <div class="form-field" id="email">
+                        <input id="email"
+                            class="form-control" 
+                            type="email" 
+                            name="email" 
+                            value="{{ request.user.email }}" 
+                        >
+                    </div>
+                    {% else %}
+                    <div class="form-field">
+                        <input 
+                            required class="form-control" 
+                            type="text" 
+                            name="name" 
+                            placeholder="Name.."
+                        >
+                    </div>
+                    <div class="form-field" id="email">
+                        <input id="email"
+                            required class="form-control" 
+                            type="email" 
+                            name="email" 
+                            placeholder="Email.."
+                        >
+                    </div>
+                    {% endif %}
+                </div>
+            
+                <div id="shipping-info">
+                    <hr>
+                    <p>Shipping Information:</p>
+                    <hr>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="address" placeholder="Address.." required>
+                    </div>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="city" placeholder="City.." required>
+                    </div>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="state" placeholder="State.." required>
+                    </div>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="zipcode" placeholder="Zip code.." required>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <button id="checkout-button" class="btn btn-primary">Checkout</button>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="box-element">
+            <a class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+            <hr>
+            <h3>Order Summary</h3>
+            {% for item in items %}
+            <div class="cart-row">
+                <img class="row-image" src="{{ item.product.imageURL }}">
+                <p>{{ item.product.name }}</p>
+                <p>${{ item.product.price }}</p>
+                <div class="quantity" style="flex: 2">
+                    <p class="quantity">{{ item.quantity }}</p>
+                    <img data-product="{{ item.product.id }}" data-action="add" class="chg-quantity update-cart" src="{% static 'images/arrow-up.png' %}" alt="arrow-up">
+                    <img data-product="{{ item.product.id }}" data-action="remove" class="chg-quantity update-cart" src="{% static 'images/arrow-down.png' %}" alt="arrow-down">
+                </div>
+            </div>
+            {% endfor %}
+            <h5>Items: {{ order.get_cart_items }}</h5>
+            <h5>Total: ${{ order.get_cart_total|floatformat:2 }}</h5>
+        </div>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const stripe = Stripe('pk_test_51QAV8yP5U5NCIsrZggQwkZr8lKesKLLkkTF02NN7DL4ykv79TolYsOSr2xSmjFneIjdlGG9r0xDbMHDiHcO7seMm00lV8GNzWx');
+        const checkoutButton = document.getElementById('checkout-button');
+
+        checkoutButton.addEventListener('click', function (e) {
+            e.preventDefault();  // Prevent form from submitting traditionally
+
+            // Collect form data
+            const name = document.querySelector('input[name="name"]').value;
+            const email = document.querySelector('input[name="email"]').value;
+
+            // Collect cart items
+            const cartItems = [
+                {% for item in items %}
+                {
+                    name: "{{ item.product.name }}",
+                    price: {{ item.product.price|floatformat:2 }},
+                    quantity: {{ item.quantity }}
+                },
+                {% endfor %}
+            ];
+
+            // Send data to the backend
+            fetch("{% url 'processOrder' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    items: cartItems
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.url) {
+                    // Redirect to Stripe checkout
+                    window.location.href = data.url;
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        });
+    });
+</script>
+<script type="text/javascript">
+	var shipping = '{{order.shipping}}'
+
+	if (shipping == 'False'){
+	 	document.getElementById('shipping-info').innerHTML = ''
+	}
+</script>
+
+
+{% endblock content %}
