@@ -1,4 +1,5 @@
 {% extends 'store/main.html' %}
+
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
@@ -11,7 +12,7 @@
                 <h6><strong>{{ product.name }}</strong></h6>
                 <button data-product="{{ product.id }}" data-action="add"
                         class="btn btn-outline-secondary add-btn update-cart">ADD TO CART</button>
-                <a class="btn btn-outline-success" href="#">View</a>
+                    <a class="btn btn-outline-success" href="{% url 'product_detail' product.id %}">View</a>
                 <h4 style="display: inline-block;float: right">{{ product.price|floatformat:2 }}T</h4>
             </div>
         </div>

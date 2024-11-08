@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -13,8 +13,10 @@ from .utils import cookieCart, cartData, guestOrder
 from .forms import SignupForm, LoginForm
 import json, datetime, stripe, base64
 
-
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+def index(request):
+    return render(request, 'store/index.html')
 
 def store(request):
     if request.user.is_authenticated:
@@ -156,3 +158,7 @@ def payment_success(request):
 # View to render a cancel page if payment was canceled
 def payment_cancel(request):
     return render(request, 'store/cancel.html')
+
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'store/product_detail.html', {'product': product})
