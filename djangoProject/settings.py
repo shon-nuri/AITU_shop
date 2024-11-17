@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-7@g!aiyjx#alpihh$u^$^cy2tco+$&3t37u@c8&kpb=m2j1pix
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'yourdomain.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store.apps.StoreConfig',
+    'django.contrib.sites',
+    'accounts',
+    'widget_tweaks',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -57,9 +61,9 @@ ROOT_URLCONF = 'djangoProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'store/templates']
-        ,
-        'APP_DIRS': True,
+        'DIRS': [BASE_DIR / 'store/templates',
+                 BASE_DIR / 'accounts/templates'],  # Custom templates directory (optional)
+        'APP_DIRS': True,  # This ensures Django looks for templates in app directories
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -145,9 +149,32 @@ STRIPE_SECRET_KEY="sk_test_51QAV8yP5U5NCIsrZ4FOSahWdDYqZx98QZdcSTwTKnEf6pV0N42YM
 
 YOUR_DOMAIN = 'http://localhost:8000'
 
-LOGIN_REDIRECT_URL = '/'
-
 AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# Email settings (for password reset)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'nadyrkhans@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'iXe3;$"4xs?PEP='  # Replace with your app password
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '460866939809-fnp2672hvf0n9d66l6irfsivous7ncta.apps.googleusercontent.com'  # Replace with your Google OAuth2 key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'  # Replace with your Google OAuth2 secret
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://6af7-5-34-4-54.ngrok.io/accounts/google/login/callback/'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = 'logout'
+LOGOUT_REDIRECT_URL = '/'
+
+SITE_ID = 1
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://a6d2-5-34-127-190.ngrok-free.app',
+    'http://a6d2-5-34-127-190.ngrok-free.app',
+]

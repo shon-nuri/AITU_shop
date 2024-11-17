@@ -1,36 +1,224 @@
 {% extends 'store/main.html' %}
 {% load static %}
-
 {% block content %}
-
 <div class="container my-5">
     <div class="row">
-        <!-- First Column: Photo Carousel -->
-        <div class="col-md-6">
-            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="{{ product.imageURL }}" alt="{{ product.name }}" class="img-fluid">
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+        <div class="mini-image col-md-2">
+            <div class="d-flex flex-column align-items-center">
+                {% for image in product.product_images.all %}
+                    <img src="{{ image.image.url }}" class="thumbnail-img mb-2" alt="Thumbnail for {{ product.name }}" onclick="changeImage(this)">
+                {% endfor %}
             </div>
         </div>
-        <div class="col-md-6">
-            <h2>{{ product.name }}</h2>
-            <p>{{ product.description }}</p>
-            <h4>{{ product.price|floatformat:2 }} T</h4>
-            <button data-product="{{ product.id }}" data-action="add"
-                    class="btn btn-primary update-cart">Add to Cart</button>
+        <!-- First Column: Photo Carousel -->
+        <div class="product-img col-md-5">
+            <div class="product">
+                <div class="col-md-8">
+                    <!-- Main Image Carousel -->
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for image in product.product_images.all %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}">
+                                </div>
+                            {% endfor %}
+                        </div>
+        
+                        <!-- Carousel Controls -->
+                        <button class="carousel-control-prev rounded-circle" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next rounded-circle" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="product-desc col-md-5">
+            <div class="product-description">
+                <h1>{{ product.name }}</h1>
+                <p>{{ product.description }}</p>
+                <p>Price: ${{ product.price }}</p>
+            </div>
+            <div class="sizes mt-4">
+                <p>Available Sizes:</p>
+                <ul>
+                    {% for size in product.sizes.all %}
+                        <li>{{ size.size }} ({{ size.stock }} in stock)</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="reviews">
+                <!-- Accordion to toggle between review form and reviews list -->
+                <div class="accordion" id="reviewsAccordion">
+                    <!-- Review Form Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingReviewForm">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReviewForm" aria-expanded="true" aria-controls="collapseReviewForm">
+                                Write a Review
+                            </button>
+                        </h2>
+                        <div id="collapseReviewForm" class="accordion-collapse collapse" aria-labelledby="headingReviewForm" data-bs-parent="#reviewsAccordion">
+                            <div class="accordion-body">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingReviews">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReviews" aria-expanded="false" aria-controls="collapseReviews">
+                                Reviews
+                            </button>
+                        </h2>
+                        <div id="collapseReviews" class="accordion-collapse collapse" aria-labelledby="headingReviews" data-bs-parent="#reviewsAccordion">
+                            <div class="accordion-body">
+                                {% for review in reviews %}
+                                    <strong>Average Rating: </strong>
+                                    {% if avg_rating %}
+                                        {{ avg_rating|floatformat:1 }} / 5
+                                    {% else %}
+                                        No ratings yet.
+                                    {% endif %}
+                                    <div class="review">
+                                        <div><strong>{{ review.user.username }}</strong> - {{ review.rating }} stars</div>
+                                        <p>{{ review.comment }}</p>
+                                    </div>
+                                {% empty %}
+                                    <p>No reviews yet. Be the first to leave one!</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
         </div>
     </div>
-</div>
+    <section class="might-like">
+        <h3>You Might Also Like</h3>
+        
+        <div class="product-row">
+            <!-- "You Might Also Like" Section -->
+            <h2>You Might Also Like</h2>
+            <div class="recommendations">
+                {% for product in same_category_products %}
+                    <div class="product">
+                        <img src="{{ product.imageURL }}" alt="{{ product.name }}">
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.price }}</p>
+                        <a href="{% url 'product_detail' product.pk %}">View Product</a>
+                    </div>
+                {% endfor %}
+            </div>
 
+            <!-- Sale Products Section -->
+            <h2>On Sale</h2>
+            <div class="sale-products">
+                {% for product in sale_products %}
+                    <div class="product">
+                        <img src="{{ product.imageURL }}" alt="{{ product.name }}">
+                        <h3>{{ product.name }}</h3>
+                        <p>
+                            <del>{{ product.price }}</del>
+                            <span class="sale-price">{{ product.sale_price }}</span>
+                        </p>
+                        <a href="{% url 'product_detail' product.pk %}">View Product</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </section>
+</div>
+<style>
+    /* Styling for the carousel control buttons */
+    .carousel-control-prev, .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        width: 20px; /* Icon size */
+        height: 20px; /* Icon size */
+    }
+
+    /* Position buttons at the bottom right */
+    #productCarousel {
+        position: relative;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        position: absolute;
+        bottom: 10px;
+        z-index: 10;
+    }
+
+    .carousel-control-prev {
+        left: 10px;
+    }
+
+    .carousel-control-next {
+        right: 10px;
+    }
+
+    /* Thumbnail Styling */
+    .thumbnail-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+    }
+
+    .thumbnail-img:hover {
+        border-color: #007bff; /* Highlight border on hover */
+    }
+
+    /* Adjust left-side column */
+    .col-md-4 {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .product-desc{
+        flex: 1;
+        overflow-y: auto;
+    }
+</style>
+
+<!-- JavaScript for changing the main image on thumbnail click -->
+<script>
+    function changeImage(thumbnail) {
+        const carousel = document.querySelector('#productCarousel');
+        const items = carousel.querySelectorAll('.carousel-item');
+        const newImageSrc = thumbnail.src;
+
+        // Loop through carousel items and find the item with the matching image
+        items.forEach((item, index) => {
+            const img = item.querySelector('img');
+            if (img.src === newImageSrc) {
+                // Update the active class
+                item.classList.add('active');
+                item.scrollIntoView({behavior: 'smooth'});
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+</script>
 {% endblock content %}

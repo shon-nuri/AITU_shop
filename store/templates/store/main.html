@@ -83,6 +83,11 @@
                             {% else %}
                             <a class="btn btn btn-outline-light me-2" href="{% url 'login' %}">Log in</a>
                             {% endif %}
+                            <form method="get" action="{% url 'product_search' %}">
+                                {% csrf_token %}
+                                <input type="text" name="query" id="id_query" value="{{ form.query.value }}"/>
+                                <button type="submit">Search</button>
+                            </form>
                             <a href="{% url 'cart' %}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="25" fill="#fff" class="bi bi-cart3" viewBox="0 0 16 16">
                                     <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
@@ -93,10 +98,10 @@
                     </div>
                 </div>
             </nav>            
-            <main class="content container my-4">
+            <div class="content container-fluid">
                 {% block content %}{% endblock %}
-            </main>
-            <footer class="mt-3 text-center text-white bg-dark py-4 ">
+            </div>
+            <footer class="mt-3 text-center text-white bg-dark py-4">
                 <div class="container">
                     <p class="mb-1">Connect with us on social media</p>
                     <div class="d-flex justify-content-center">
@@ -120,26 +125,6 @@
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
         <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
-        <script type="text/javascript">
-            document.addEventListener("DOMContentLoaded", function() {
-                let lastScrollTop = 0;  // Initial position at the top
-                const navbar = document.getElementById("navbar");
-            
-                window.addEventListener("scroll", function() {
-                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-                    if (scrollTop > lastScrollTop) { 
-                        // Scrolling down: hide the navbar
-                        navbar.style.top = "-80px";
-                    } else {
-                        // Scrolling up: show the navbar
-                        navbar.style.top = "0";
-                    }
-            
-                    // Update the last scroll position
-                    lastScrollTop = scrollTop;
-                });
-            });            
-        </script>
+        <script type="text/javascript" src="{% static 'js/navbar.js' %}"></script>
     </body>
 </html>

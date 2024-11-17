@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container auth-container">
+    <div class="auth-card p-4">
+        <h2 class="text-center mb-4 text-primary">Create Account</h2>
+        <p class="text-center text-muted mb-4">Sign up for a new account</p>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+                    {{ form.first_name|add_class:"form-control" }}
+                    {% if form.first_name.errors %}
+                    <div class="text-danger small">
+                        {{ form.first_name.errors|join:", " }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                    {{ form.last_name|add_class:"form-control" }}
+                    {% if form.last_name.errors %}
+                    <div class="text-danger small">
+                        {{ form.last_name.errors|join:", " }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% for field in form.visible_fields %}
+            {% if field.name not in 'first_name,last_name'|split:',' %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">
+                    {{ field.label }}
+                </label>
+                {{ field|add_class:"form-control" }}
+                {% if field.errors %}
+                <div class="text-danger small">
+                    {{ field.errors|join:", " }}
+                </div>
+                {% endif %}
+                {% if field.help_text %}
+                <div class="form-text">
+                    {{ field.help_text }}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="terms" required>
+                <label class="form-check-label" for="terms">
+                    I agree to the 
+                    <a href="#" class="text-primary">Terms of Service</a>
+                    and
+                    <a href="#" class="text-primary">Privacy Policy</a>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mb-3">Create Account</button>
+        </form>
+
+        <p class="text-center mb-0">
+            Already have an account? 
+            <a href="{% url 'login' %}" class="text-primary text-decoration-none">Sign in</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,15 +1,14 @@
 body, html {
-    height: 100%;
+    margin: 0;
+    height: 100dvh;
     background-color: hsl(0, 0%, 98%);
     margin: 0;
+    overflow-x: hidden;
+    width: 100%; 
 }
-
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    height: 100%;
 }
-
 .content {
     flex: 1;
 }
@@ -129,12 +128,15 @@ a {
 .hero-section {
     background-size: cover;
     background-position: center;
+    background-color: #333;
     height: 80vh;
-    color: white;
+    color: rgb(253, 253, 253);
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
 }
 
 .hero-text {
@@ -150,16 +152,83 @@ a {
     transform: scale(1.05);
 }
 
-#navbar {
-    transition: top 0.3s ease;
+.typing-effect {
+    font-family: monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid;
+    width: 0;
+    animation: typing 3s steps(50, end) forwards, blink-caret 0.5s step-end infinite;
 }
 
-/* Mobile responsive navbar */
-@media (max-width: 767px) {
-    .navbar-collapse {
-        background-color: #333;
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink-caret {
+    50% { border-color: transparent; }
+}
+
+/* Set initial style for the sliding text */
+.hero-image {
+    position: relative;
+    animation: slideIn 1s ease-out forwards; /* Trigger the animation */
+    opacity: 0; /* Start hidden for a smooth transition */
+}
+
+/* Define the slide-in animation */
+@keyframes slideIn {
+    0% {
+        transform: translateX(-100%); /* Start off-screen to the left */
+        opacity: 0;
     }
-    .navbar-collapse a {
-        color: white;
+    100% {
+        transform: translateX(0); /* End position */
+        opacity: 1;
     }
 }
+
+.photo-container {
+    width: 100vw;
+    margin-left: calc(50% - 49vw);
+    overflow-x: hidden;
+}
+
+.grid-item {
+    height: 40vh;
+    background-image: url('static/images/aitu_hoodie.jpg')
+    background-size 100% 100%;
+}
+
+.container-fluid  {
+    width:  100% !important;
+}
+
+/* Sidebar styling */
+#sidebar {
+    position: absolute; /* Stick to the left */
+    top: 0;
+    left: 0;
+    width: 18%; /* Adjust width as needed */
+    height: 100vh; /* Full height */
+    z-index: 1000; /* Ensure it's above the content */
+    background-color: #343a40; /* Dark background */
+  }
+  
+  /* Ensure content respects sidebar */
+  .col.py-3 {
+    margin-left: 18%; /* Match sidebar width */
+    transition: margin-left 0.3s ease-in-out; /* Smooth transition */
+  }
+
+#sidebar-items {
+    a{
+        color: #fff;
+    }
+    a:hover {
+        color: #000;
+        background-color: #fff;
+    }
+}
+

@@ -3,14 +3,16 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, login, authenticate
+from django.db.models import Q, F
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
+from django.db.models import Avg
 
 
 from .models import *
 from .utils import cookieCart, cartData, guestOrder
-from .forms import SignupForm, LoginForm
+from .forms import *
 import json, datetime, stripe, base64
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -130,27 +132,9 @@ def create_payment_intent(request):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-def user_signup(request):
-    form = SignupForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('login')
-    return render(request, 'store/signup.html', {'form': form})
-
-def user_login(request):
-    form = LoginForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        user = authenticate(request, username=username, password=password)
-        if user:
-            login(request, user)
-            return redirect('store')
-    return render(request, 'store/login.html', {'form': form})
-
 def user_logout(request):
     logout(request)
-    return redirect('store')
+    return redirect('index')
 
 def payment_success(request):
     return render(request, 'store/success.html')
@@ -159,6 +143,58 @@ def payment_success(request):
 def payment_cancel(request):
     return render(request, 'store/cancel.html')
 
+@login_required(login_url='login')
 def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, 'store/product_detail.html', {'product': product})
+    product = get_object_or_404(Product.objects.prefetch_related('reviews'), pk=pk)
+    reviews = product.reviews.all()
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+
+    # Fetch related products from the same category
+    same_category_products = Product.objects.filter(category=product.category).exclude(pk=product.pk)[:4]
+
+    # Fetch products on sale
+    sale_products = Product.objects.filter(Q(sale_price__isnull=False) & Q(sale_price__lt=F('price')))[:4]
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+            return redirect('product_detail', pk=product.pk)
+    else:
+        form = ReviewForm()
+
+    context = {
+        'product': product,
+        'reviews': reviews,
+        'avg_rating': avg_rating,
+        'form': form,
+        'same_category_products': same_category_products,
+        'sale_products': sale_products,
+    }
+    return render(request, 'store/product_detail.html', context)
+
+def store_by_category(request, category):
+    # Filter products by category
+    products = Product.objects.filter(category__iexact=category)  # Case-insensitive match
+    data = cartData(request)
+    cartItems = data['cartItems']
+    context = {
+        'products': products,
+        'category': category.capitalize(),
+        'cartItems': cartItems  
+    }
+    return render(request, 'store/store.html', context)
+
+def product_search(request):
+    query = request.GET.get('query', '')
+    products = Product.objects.all()
+
+    if query:
+        products = products.filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        )
+    form = SearchForm(initial={'query': query})
+    return render(request, 'store/store.html', {'form': form, 'products': products})

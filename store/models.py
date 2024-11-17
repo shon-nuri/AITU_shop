@@ -9,12 +9,22 @@ class Customer(models.Model):
     def __str__(self):
         return self.name
 
+
 class Product(models.Model):
+    CATEGORY_CHOICES = [
+        ('hoodie', 'Hoodie'),
+        ('tshirt', 'T-Shirt'),
+        ('accessory', 'Accessory'),
+        ('sale', 'Sale'),
+    ]
     name = models.CharField(max_length=200, null=True)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     digital = models.BooleanField(default=False, null=True, blank=False)
+    description = models.TextField(max_length=200, null=True)
     image = models.ImageField(null=True, blank=True)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, null=True) 
 
+    
     def __str__(self):
         return self.name
 
@@ -27,11 +37,16 @@ class Product(models.Model):
         return url
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
+    image = models.ImageField(upload_to='product_images/', null=False)
 
     def __str__(self):
-        return f"{self.product.name} Image"
+        return f'{self.product.name} - Image'
+
+class ProductSize(models.Model):
+    product = models.ForeignKey(Product, related_name='sizes', on_delete=models.CASCADE)
+    size = models.CharField(max_length=10)
+    stock = models.PositiveIntegerField(default=0)
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=False, null=True)
@@ -72,3 +87,12 @@ class ShippingAddress(models.Model):
 
     def __str__(self):
         return self.address
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])  # Rating from 1 to 5
+    comment = models.TextField()
+
+    def __str__(self):
+        return f"Review by {self.user.username} for {self.product.name}"

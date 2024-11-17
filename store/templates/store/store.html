@@ -1,22 +1,132 @@
 {% extends 'store/main.html' %}
-
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 {% block content %}
-    <div class="row">
-        {% for product in products %}
-        <div class="col-lg-4">
-            <img class="thumbnail" src="{{product.imageURL}}">
-            <div class="box-element product">
-                <h6><strong>{{ product.name }}</strong></h6>
-                <button data-product="{{ product.id }}" data-action="add"
-                        class="btn btn-outline-secondary add-btn update-cart">ADD TO CART</button>
-                    <a class="btn btn-outline-success" href="{% url 'product_detail' product.id %}">View</a>
-                <h4 style="display: inline-block;float: right">{{ product.price|floatformat:2 }}T</h4>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark" id="sidebar">
+                <div id="sidebar-items" class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white" style="max-height: 100vh; overflow-y: auto; overflow-x: hidden;">
+                    <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline">Menu</span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span>
+                            </a>
+                            <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                                <li class="nav-item">
+                                    <a href="{% url 'store_by_category' 'hoodie' %}" class="nav-link">Hoodies</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'store_by_category' 'tshirt' %}" class="nav-link">T-Shirts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'store_by_category' 'sale' %}" class="nav-link">Sale</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Orders</span>
+                            </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">Order 1</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">Order 2</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">Order 3</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Products</span>
+                            </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                                <li class="nav-item">
+                                    <a href="#subsubmenu1" data-bs-toggle="collapse" class="nav-link">Product Category 1</a>
+                                    <ul class="collapse nav flex-column ms-1" id="subsubmenu1" data-bs-parent="#submenu3">
+                                        <li><a href="#" class="nav-link">Product 1A</a></li>
+                                        <li><a href="#" class="nav-link">Product 1B</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#subsubmenu2" data-bs-toggle="collapse" class="nav-link">Product Category 2</a>
+                                    <ul class="collapse nav flex-column ms-1" id="subsubmenu2" data-bs-parent="#submenu3">
+                                        <li><a href="#" class="nav-link">Product 2A</a></li>
+                                        <li><a href="#" class="nav-link">Product 2B</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Customers</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <hr>
+                    <div class="dropdown pb-4">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                            <span class="d-none d-sm-inline mx-1">loser</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                            <li><a class="dropdown-item" href="#">New project...</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Sign out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>            
+            <div class="col py-3">
+                <div class="row">
+                    {% for product in products %}
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card product-card">
+                                <img src="{{ product.images.first.image.url }}" class="card-img-top" alt="Product">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title"><strong>{{ product.name }}</strong></h5>
+                                    <button data-product="{{ product.id }}" data-action="add"
+                                        class="btn btn-outline-secondary add-btn update-cart">ADD TO CART</button>
+                                    <a class="btn btn-outline-success" href="{% url 'product_detail' product.id %}">View</a>
+                                    <h4 style="display: inline-block;float: right">{{ product.price|floatformat:2 }}T</h4>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <li>No products found</li>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-        {% endfor %}
     </div>
+    <script type="text/javascript">
+        const sidebar = document.getElementById('sidebar');
+        const content = document.querySelector('.col.py-3');
+
+        // Add toggle functionality for sidebar
+        function toggleSidebar() {
+        if (sidebar.classList.contains('hidden')) {
+            sidebar.classList.remove('hidden');
+            content.style.marginLeft = '18%'; /* Restore sidebar width */
+        } else {
+            sidebar.classList.add('hidden');
+            content.style.marginLeft = '0'; /* Remove margin for full-width content */
+        }
+        }
+    </script>
 {% endblock content %}
-<img src="{% static 'images/cart.png' %}">
+
