@@ -15,4 +15,5 @@ urlpatterns = [
     path('cancel/', views.payment_cancel, name='payment_cancel'),
     path('product/<int:pk>/', views.product_detail, name='product_detail'), 
     path('accounts/', include('accounts.urls')),
+    path('contact/', views.contact_form, name='contact_form'),
 ]

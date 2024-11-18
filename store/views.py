@@ -9,7 +9,6 @@ from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.db.models import Avg
 
-
 from .models import *
 from .utils import cookieCart, cartData, guestOrder
 from .forms import *
@@ -32,17 +31,18 @@ def store(request):
     context = {'products': products, 'cartItems': cartItems}
     return render(request, 'store/store.html', context)
 
+@login_required(login_url='login')
 def cart(request):
     data = cartData(request)
     context = {'items': data['items'], 'order': data['order'], 'cartItems': data['cartItems']}
     return render(request, 'store/cart.html', context)
 
+@login_required(login_url='login')
 def checkout(request):
     data = cartData(request)
     context = {'items': data['items'], 'order': data['order'], 'cartItems': data['cartItems']}
     return render(request, 'store/checkout.html', context)
 
-@login_required
 def updateItem(request):
     data = json.loads(request.body)
     productId = data['productId']
@@ -149,12 +149,6 @@ def product_detail(request, pk):
     reviews = product.reviews.all()
     avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
 
-    # Fetch related products from the same category
-    same_category_products = Product.objects.filter(category=product.category).exclude(pk=product.pk)[:4]
-
-    # Fetch products on sale
-    sale_products = Product.objects.filter(Q(sale_price__isnull=False) & Q(sale_price__lt=F('price')))[:4]
-
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
@@ -171,22 +165,24 @@ def product_detail(request, pk):
         'reviews': reviews,
         'avg_rating': avg_rating,
         'form': form,
-        'same_category_products': same_category_products,
-        'sale_products': sale_products,
     }
     return render(request, 'store/product_detail.html', context)
 
 def store_by_category(request, category):
-    # Filter products by category
-    products = Product.objects.filter(category__iexact=category)  # Case-insensitive match
-    data = cartData(request)
-    cartItems = data['cartItems']
+    # Filter products by category name (assuming 'Category' model has a 'name' field)
+    products = Product.objects.filter(category__name__iexact=category)
+    
+    # Get cart data
+    cart_items = cartData(request).get('cartItems', 0)  # Default to 0 if no cartItems
+    
     context = {
         'products': products,
-        'category': category.capitalize(),
-        'cartItems': cartItems  
+        'category': category.capitalize(),  # Capitalize category name for display
+        'cartItems': cart_items
     }
+
     return render(request, 'store/store.html', context)
+
 
 def product_search(request):
     query = request.GET.get('query', '')
@@ -198,3 +194,18 @@ def product_search(request):
         )
     form = SearchForm(initial={'query': query})
     return render(request, 'store/store.html', {'form': form, 'products': products})
+
+def contact_form(request):
+    if request.method == "POST":
+        # Extract form data
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        # Save to database
+        ContactMessage.objects.create(name=name, email=email, message=message)
+
+        # Return success response
+        return JsonResponse({'success': True, 'message': 'Thank you! We will contact you soon.'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request.'})

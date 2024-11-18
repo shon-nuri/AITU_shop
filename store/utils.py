@@ -3,11 +3,13 @@ from . models import *
 
 def cookieCart(request):
     try:
-        cart: object = json.loads(request.COOKIES['cart'])
-    except:
+        cart = json.loads(request.COOKIES.get('cart', '{}'))
+    except json.JSONDecodeError:
         cart = {}
+        print('Cart is not valid JSON')
 
-    print('CART:', cart)
+    print('CART:', cart)  # Debugging the cart data
+
     items = []
     order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
     cartItems = order['get_cart_items']
@@ -17,7 +19,7 @@ def cookieCart(request):
             cartItems += cart[i]["quantity"]
 
             product = Product.objects.get(id=i)
-            total = (product.price * cart[i]["quantity"])
+            total = product.price * cart[i]["quantity"]
 
             order['get_cart_total'] += total
             order['get_cart_items'] += cart[i]["quantity"]
@@ -34,11 +36,18 @@ def cookieCart(request):
             }
             items.append(item)
 
-            if product.digital == False:
+            if not product.digital:
                 order['shipping'] = True
-        except:
-            pass
+
+        except Product.DoesNotExist:
+            print(f'Product with id {i} does not exist.')
+        except Exception as e:
+            print(f'Error processing cart item {i}: {str(e)}')
+
+    print('Final Cookie Cart Data:', {'cartItems': cartItems, 'order': order, 'items': items})
     return {'cartItems': cartItems, 'order': order, 'items': items}
+
+
 
 def cartData(request):
     if request.user.is_authenticated:
@@ -52,21 +61,22 @@ def cartData(request):
         order = cookieData['order']
         items = cookieData['items']
 
+    print('Cart Data:', {'items': items, 'order': order, 'cartItems': cartItems})  # Debugging
     return {'items': items, 'order': order, 'cartItems': cartItems}
+
 
 
 def guestOrder(request, data):
     print('User is not logged in...')
     print('COOKIES:', request.COOKIES)
+
     name = data['form']['name']
     email = data['form']['email']
 
-    cookiesData = cookieCart(request)
-    items = cookiesData['items']
+    cookieData = cookieCart(request)
+    items = cookieData['items']
 
-    customer, created = Customer.objects.get_or_create(
-        email=email,
-    )
+    customer, created = Customer.objects.get_or_create(email=email)
     customer.name = name
     customer.save()
 
@@ -75,13 +85,19 @@ def guestOrder(request, data):
         complete=False,
     )
     for item in items:
-        product = Product.objects.get(id=item['product']['id'])
-        orderItem = orderItem.objects.create(
-            product=product,
-            order=order,
-            quantity=item['quantity']
-        )
-    return customer, order
-    context = {'items': data['items'], 'order': data['order'], 'cartItems': data['cartItems']}
-    return render(request, 'store/customization.html', context)
+        print('Processing item:', item)
+        try:
+            product = Product.objects.get(id=item['product']['id'])
+            print(f'Found product: {product}')
+            order_item = OrderItem.objects.create(
+                product=product,
+                order=order,
+                quantity=item['quantity']
+            )
+            print(f'Created order item: {order_item}')
+        except Product.DoesNotExist:
+            print(f'Product with id {item["product"]["id"]} does not exist.')
+        except Exception as e:
+            print(f'Error creating order item: {str(e)}')
+        return customer, order
 

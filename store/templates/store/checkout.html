@@ -74,19 +74,19 @@
             <hr>
             <h3>Order Summary</h3>
             {% for item in items %}
-            <div class="cart-row">
-                <img class="row-image" src="{{ item.product.imageURL }}">
-                <p>{{ item.product.name }}</p>
-                <p>${{ item.product.price }}</p>
-                <div class="quantity" style="flex: 2">
-                    <p class="quantity">{{ item.quantity }}</p>
-                    <img data-product="{{ item.product.id }}" data-action="add" class="chg-quantity update-cart" src="{% static 'images/arrow-up.png' %}" alt="arrow-up">
-                    <img data-product="{{ item.product.id }}" data-action="remove" class="chg-quantity update-cart" src="{% static 'images/arrow-down.png' %}" alt="arrow-down">
+            <div class="cart-row d-flex align-items-center border-bottom pb-2 mb-2">
+                <img class="row-image me-3 rounded" src="{{ item.product.imageURL }}" alt="{{ item.product.name }}" style="width: 50px; height: 50px; object-fit: cover;">
+                <p class="mb-0 me-3 flex-grow-1">{{ item.product.name }}</p>
+                <p class="mb-0 me-3">{{ item.product.price }}tg</p>
+                <div class="quantity d-flex align-items-center">
+                    <p class="mb-0 me-2">{{ item.quantity }}</p>
+                    <img data-product="{{ item.product.id }}" data-action="add" class="chg-quantity update-cart me-2" src="{% static 'images/arrow-up.png' %}" alt="arrow-up" style="width: 16px; height: 16px;">
+                    <img data-product="{{ item.product.id }}" data-action="remove" class="chg-quantity update-cart" src="{% static 'images/arrow-down.png' %}" alt="arrow-down" style="width: 16px; height: 16px;">
                 </div>
-            </div>
+            </div>            
             {% endfor %}
             <h5>Items: {{ order.get_cart_items }}</h5>
-            <h5>Total: ${{ order.get_cart_total|floatformat:2 }}</h5>
+            <h5>Total: T{{ order.get_cart_total|floatformat:2 }}</h5>
         </div>
     </div>
 </div>

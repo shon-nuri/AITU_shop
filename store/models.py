@@ -10,38 +10,39 @@ class Customer(models.Model):
         return self.name
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
-    CATEGORY_CHOICES = [
-        ('hoodie', 'Hoodie'),
-        ('tshirt', 'T-Shirt'),
-        ('accessory', 'Accessory'),
-        ('sale', 'Sale'),
-    ]
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=200, null=True)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     digital = models.BooleanField(default=False, null=True, blank=False)
     description = models.TextField(max_length=200, null=True)
-    image = models.ImageField(null=True, blank=True)
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, null=True) 
+    image = models.ImageField(null=True, blank=True, upload_to="products/")
 
-    
     def __str__(self):
         return self.name
 
     @property
     def imageURL(self):
         try:
-            url = self.image.url
+            return self.image.url
         except:
-            url = ''
-        return url
+            return '/static/images/default.jpg'  # Fallback to a default image if none is set
+
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
-    image = models.ImageField(upload_to='product_images/', null=False)
+    product = models.ForeignKey(Product, related_name="product_images", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="products/")
 
     def __str__(self):
         return f'{self.product.name} - Image'
+
 
 class ProductSize(models.Model):
     product = models.ForeignKey(Product, related_name='sizes', on_delete=models.CASCADE)
@@ -50,7 +51,7 @@ class ProductSize(models.Model):
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=False, null=True)
-    date_orderd = models.DateTimeField(auto_now_add=True)
+    date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
     transaction_id = models.CharField(max_length=200, null=True)
 
@@ -96,3 +97,12 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review by {self.user.username} for {self.product.name}"
+    
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

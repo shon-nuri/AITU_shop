@@ -18,6 +18,7 @@
                 </table>
             </div>
             <br>
+            {% if items %}
             <div class="box-element">
                 <div class="cart-row">
                     <div style="flex: 2"></div>
@@ -43,6 +44,12 @@
                 </div>
                 {% endfor %}
             </div>
+            {% else %}
+            <div class="box-element">
+                <h5>Your cart is empty!</h5>
+                <a class="btn btn-outline-dark" href="{% url 'store' %}">Go back to shopping</a>
+            </div>
+            {% endif %}
         </div>
     </div>
 {% endblock content %}

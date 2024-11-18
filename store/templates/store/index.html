@@ -1,120 +1,578 @@
-{% extends 'store/main.html' %}
+<!DOCTYPE html>
 {% load static %}
-{% block content %}
-    <div class="hero-section container-fluid">
-        <div id="hero-image" class="hero-image lg-4 md-6 sm-12 me-5">
-        </div>
-        <div class="hero-text lg-8 md-6 sm-12">
-            <div class="typing-effect">
-                Unleash your style, elevate your confidence—where every purchase tells your story.
-            </div>            
-            <a href="#new-products" class=btn btn-light mt-3">Shop New Arrivals</a>
-        </div>
-    </div>
-    <!-- New Products Section -->
-    <section id="new-products" class="container my-5">
-        <h2 class="text-center mb-5">New Arrivals</h2>
-        <div class="row">
-            <!-- Product 1 -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card product-card">
-                    <img src="{% static 'images/white_hoodie.jpg'%}" class="card-img-top" alt="Product 3">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">White Hoodie</h5>
-                        <p class="card-text">8000T</p>
-                        <a href="{% url 'store'%}" class="btn btn-primary">Shop Now</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card product-card">
-                    <img src="{% static 'images/aitu_hoodie.jpg'%}" class="card-img-top" alt="Product 3">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Hoodie</h5>
-                        <p class="card-text">8000T</p>
-                        <a href="{% url 'store'%}" class="btn btn-primary">Shop Now</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card product-card">
-                    <img src="{% static 'images/t-shirt.jpg'%}" class="card-img-top" alt="Product 3">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Hoodie</h5>
-                        <p class="card-text">8000T</p>
-                        <a href="{% url 'store'%}" class="btn btn-primary">Shop Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Featured Collection Section -->
-    <section class="container my-5">
-        <h2 class="text-center mb-5">Featured Collection</h2>
-        <div class="row">
-            <!-- Replace with actual content as needed -->
-            <div id="featured-image" class="col-lg-6">
-            </div>
-            <div class="col-lg-6 d-flex flex-column justify-content-center">
-                <h3>Premium Collection</h3>
-                <p>Experience the best quality and latest fashion trends with our premium collection.</p>
-                <a href="{% url 'store'%}" class="btn btn-outline-dark">Explore Collection</a>
-            </div>
-        </div>
-    </section>
-    <!-- Promotions or Deals Section -->
-    <div class="photo-container my-5">
-        <div class="row">
-            <div class="col-md-6 ">
-                <div class="grid-item">
-                    <button type="button" class="btn btn-dark">Dark</button>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--  
+    Document Title
+    =============================================
+    -->
+    <title>AITU_shop</title>
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'assets/images/favicons/apple-icon-57x57.png' %}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{% static 'assets/images/favicons/apple-icon-60x60.png' %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'assets/images/favicons/apple-icon-72x72.png' %}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'assets/images/favicons/apple-icon-76x76.png' %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'assets/images/favicons/apple-icon-114x114.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'assets/images/favicons/apple-icon-120x120.png' %}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'assets/images/favicons/apple-icon-144x144.png' %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'assets/images/favicons/apple-icon-152x152.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/images/favicons/apple-icon-180x180.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'assets/images/favicons/android-icon-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/images/favicons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'assets/images/favicons/favicon-96x96.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/images/favicons/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'assets/manifest.json' %}">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{% static 'assets/images/favicons/ms-icon-144x144.png' %}">
+    <meta name="theme-color" content="#ffffff">
 
-                    <div class="content">
-                        <h5>Text 1</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 ">
-                <div class="grid-item">
-                    <button type="button" class="btn btn-dark">Dark</button>
+    <!-- Stylesheets -->
+    <!-- Default stylesheets -->
+    <link href="{% static 'assets/lib/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
 
-                    <div class="content">
-                        <h5>Text 2</h5>
-                    </div>
+    <!-- Template specific stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Volkhov:400i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+    <link href="{% static 'assets/lib/animate.css/animate.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/lib/components-font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/lib/et-line-font/et-line-font.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/lib/flexslider/flexslider.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/lib/owl.carousel/dist/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/lib/owl.carousel/dist/assets/owl.theme.default.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/lib/magnific-popup/dist/magnific-popup.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/lib/simple-text-rotator/simpletextrotator.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    <link id="color-scheme" href="{% static 'assets/css/colors/default.css' %}" rel="stylesheet">
+  </head>
+  <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
+    <main>
+      <div class="page-loader">
+        <div class="loader">Loading...</div>
+      </div>
+      <nav class="navbar navbar-custom navbar-fixed-top navbar-transparent" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#custom-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">AITU</a>
+          </div>
+          <div class="collapse navbar-collapse" id="custom-collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="{% url 'store' %}">Store</a></li>
+              
+              {% if request.user.is_authenticated %}
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Hello, {{ request.user.username }} <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <form class="px-3" method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link">Logout</button>
+                      </form>
+                    </li>
+                  </ul>
+                </li>
+              {% else %}
+                <li><a class="btn btn-outline-light" href="{% url 'login' %}">Log in</a></li>
+              {% endif %}
+      
+              <li>
+                <form method="get" action="{% url 'product_search' %}" class="navbar-form navbar-left">
+                  {% csrf_token %}
+                  <div class="input-group">
+                    <input type="text" name="query" id="id_query" value="{{ form.query.value }}" class="form-control" placeholder="Search products">
+                    <span class="input-group-btn">
+                      <button type="submit" class="btn btn-primary">Search</button>
+                    </span>
+                  </div>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>      
+      <section class="home-section home-parallax home-fade home-full-height bg-dark-60 agency-page-header position-relative" id="home" style="background: url('{% static "assets/images/agency/aitu_photo_hero.jpeg" %}') center/cover no-repeat;">
+        <!-- Dark Overlay -->
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.6;"></div>
+        <!-- Content -->
+        <div class="titan-caption position-relative text-center text-white">
+            <div class="caption-content">
+                <div class="font-alt mb-30 titan-title-size-1">Grow your awesome idea</div>
+                <div class="font-alt mb-40 titan-title-size-3">
+                    Wear <span class="rotate">beautiful | quality | fashion</span> clothes
                 </div>
-            </div>
-            <div class="col-md-6 ">
-                <div class="grid-item">
-                    <button type="button" class="btn btn-dark">Dark</button>
-
-                    <div class="content">
-                        <h5>Text 3</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="grid-item">
-                    <button type="button" class="btn btn-dark">Dark</button>
-
-                    <div class="content">
-                        <h5>Text 4</h5>
-                    </div>
-                </div>
+                <a class="section-scroll btn btn-border-w btn-circle" href="#about">Learn More</a>
             </div>
         </div>
-    </div>
-    <section class="promotions-section">
-        <div class="row">
-            <div id="container3D" class="col-lg-4 col-md-2 col-sm-1">
+      </section>
+      <div class="main">
+        <section class="module">
+          <div class="container">
+            <div class="row multi-columns-row">
+              <!-- High-Quality Products -->
+              <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="features-item">
+                  <div class="features-icon"><span class="icon-lightbulb"></span></div>
+                  <h3 class="features-title font-alt">Premium Quality</h3>
+                  Our apparel combines durable materials with cutting-edge design for unmatched comfort and style.
+                </div>
+              </div>
+        
+              <!-- Unique AITU Branding -->
+              <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="features-item">
+                  <div class="features-icon"><span class="icon-trophy"></span></div>
+                  <h3 class="features-title font-alt">Exclusive Branding</h3>
+                  Show your AITU pride with unique merchandise inspired by our university's innovative spirit.
+                </div>
+              </div>
+        
+              <!-- Secure Payments -->
+              <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="features-item">
+                  <div class="features-icon"><span class="icon-lock"></span></div>
+                  <h3 class="features-title font-alt">Secure Checkout</h3>
+                  Enjoy a smooth and secure shopping experience with trusted payment options.
+                </div>
+              </div>
+        
+              <!-- Dedicated Support -->
+              <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="features-item">
+                  <div class="features-icon"><span class="icon-lifesaver"></span></div>
+                  <h3 class="features-title font-alt">Customer Support</h3>
+                  Have questions? Our friendly team is ready to help you with any inquiries or concerns.
+                </div>
+              </div>
             </div>
-            <div class="offer-section col-lg-auto ms-5">
-                <h2>Special Offer: 20% Off</h2>
-                <p class="mt-3">Use code <strong>WELCOME20</strong> at checkout. Limited time only!</p>
-                <a href="{% url 'store' %}" class="btn btn-success mt-3">Shop Now</a>
+          </div>
+        </section>               
+        <section class="module pt-0 pb-0" id="about">
+          <div class="row position-relative m-0">
+            <div class="col-xs-12 col-md-6 side-image" data-background="{% static 'assets/images/uni_photo.jpg'%}"></div>
+            <div class="col-xs-12 col-md-6 col-md-offset-6 side-image-text">
+              <div class="row">
+                <div class="col-sm-12">
+                  <h2 class="module-title font-alt align-left">About University</h2>
+                  <div class="module-subtitle font-serif align-left">AITU fosters innovation, providing cutting-edge technology education to prepare future leaders in the digital world.</div>
+                  <p>Astana IT University (AITU) is a hub for technological innovation and academic excellence. It equips students with practical skills and theoretical knowledge to excel in the IT industry. AITU emphasizes research, entrepreneurship, and global collaboration, shaping visionary leaders ready to tackle real-world challenges in an ever-evolving digital landscape.</p>
+                </div>
+              </div>
             </div>
+          </div>
+        </section>
+        <section class="module pb-0" id="works">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-6 col-sm-offset-3">
+                <h2 class="module-title font-alt">Our Premium Products</h2>
+                <div class="module-subtitle font-serif"></div>
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-12">
+                <ul class="filter font-alt" id="filters">
+                  <li><a class="current wow fadeInUp" href="#" data-filter="*">All</a></li>
+                  <li><a class="wow fadeInUp" href="#" data-filter=".hoodie" data-wow-delay="0.2s">Hoodie</a></li>
+                  <li><a class="wow fadeInUp" href="#" data-filter=".shirt" data-wow-delay="0.4s">Shirt</a></li>
+                </ul>
+              </div>
+            </div>
+            <ul class="works-grid works-grid-gut works-grid-3 works-hover-d" id="works-grid">
+              <li class="work-item hoodie"><a href="{% url 'store' %}">
+                  <div class="work-image"><img src="{% static 'images\aitu_hoodie_black_front.jpg'%}" alt="Portfolio Item"/></div>
+                  <div class="work-caption font-alt">
+                    <h3 class="work-title">Black Hoodie</h3>
+                    <div class="work-descr">AITU</div>
+                  </div></a></li>
+              <li class="work-item hoodie"><a href="{% url 'store' %}">
+                  <div class="work-image"><img src="{% static 'images\white_hoodie.jpg'%}" alt="Portfolio Item"/></div>
+                  <div class="work-caption font-alt">
+                    <h3 class="work-title">White Hoodie</h3>
+                    <div class="work-descr">AITU</div>
+                  </div></a></li>
+              <li class="work-item shirt"><a href="{% url 'store' %}">
+                  <div class="work-image"><img src="{% static 'images\t-shirt.jpg'%}" alt="Portfolio Item"/></div>
+                  <div class="work-caption font-alt">
+                    <h3 class="work-title">T Shirt</h3>
+                    <div class="work-descr">AITU</div>
+                  </div></a></li>
+            </ul>
+          </div>
+        </section>
+        <section class="module-small bg-dark">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-6 col-md-8 col-lg-6 col-lg-offset-2">
+                <div class="callout-text font-alt">
+                  <h3 class="callout-title">Want to see more?</h3>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-4 col-lg-2">
+                <div class="callout-btn-box"><a class="btn btn-w btn-round" href="{% url 'store' %}">Store</a></div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="module" id="team">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-6 col-sm-offset-3">
+                <h2 class="module-title font-alt">Meet Our Team</h2>
+                <div class="module-subtitle font-serif">A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="mb-sm-20 wow fadeInUp col-md-4 col-sm-6 col-xs-12" onclick="wow fadeInUp">
+                <div class="team-item">
+                  <div class="team-image"><img src="{% static 'images/face_1.jpg'%}" alt="Member Photo"/>
+                    <div class="team-detail">
+                      <h5 class="font-alt">Hi all</h5>
+                      <p class="font-serif">Lorem ipsum dolor sit amet, consectetur adipiscing elit lacus, a&amp;nbsp;iaculis diam.</p>
+                      <div class="team-social"><a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-dribbble"></i></a><a href="#"><i class="fa fa-skype"></i></a></div>
+                    </div>
+                  </div>
+                  <div class="team-descr font-alt">
+                    <div class="team-name">Ibragim Zholamanov</div>
+                    <div class="team-role">Frontend</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-sm-20 wow fadeInUp col-md-4 col-sm-6 col-xs-12" onclick="wow fadeInUp">
+                <div class="team-item">
+                  <div class="team-image"><img src="{% static 'images/face_2.png'%}" alt="Member Photo"/>
+                    <div class="team-detail">
+                      <h5 class="font-alt">Good day</h5>
+                      <p class="font-serif">Lorem ipsum dolor sit amet, consectetur adipiscing elit lacus, a&amp;nbsp;iaculis diam.</p>
+                      <div class="team-social"><a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-dribbble"></i></a><a href="#"><i class="fa fa-skype"></i></a></div>
+                    </div>
+                  </div>
+                  <div class="team-descr font-alt">
+                    <div class="team-name">Anuar Telgarin</div>
+                    <div class="team-role">Design</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-sm-20 wow fadeInUp col-md-4 col-sm-6 col-xs-12" onclick="wow fadeInUp">
+                <div class="team-item">
+                  <div class="team-image"><img src="{% static 'images/face_3.jpg'%}" alt="Member Photo"/>
+                    <div class="team-detail">
+                      <h5 class="font-alt">Yes, it's me</h5>
+                      <p class="font-serif">Lorem ipsum dolor sit amet, consectetur adipiscing elit lacus, a&amp;nbsp;iaculis diam.</p>
+                      <div class="team-social"><a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-dribbble"></i></a><a href="#"><i class="fa fa-skype"></i></a></div>
+                    </div>
+                  </div>
+                  <div class="team-descr font-alt">
+                    <div class="team-name">Beimbet Saktaganov</div>
+                    <div class="team-role">Backend Developer</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <hr class="divider-w">
+        <section class="module">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-6">
+                <h4 class="font-alt mb-30">Frequently Asked Questions</h4>
+                <div class="panel-group" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title font-alt"><a data-toggle="collapse" data-parent="#accordion" href="#support1">1. What is AITU known for?</a></h4>
+                    </div>
+                    <div class="panel-collapse collapse in" id="support1">
+                      <div class="panel-body">AITU (Astana IT University) is renowned for its focus on technological education, innovation, and preparing students for careers in IT and related fields. It emphasizes research, entrepreneurship, and collaboration with global tech leaders.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title font-alt"><a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#support2">2. What kind of products are available in the web store?</a></h4>
+                    </div>
+                    <div class="panel-collapse collapse" id="support2">
+                      <div class="panel-body">The web store offers a variety of premium apparel, including hoodies, t-shirts, and other branded merchandise. Each product is crafted to combine style, quality, and comfort, reflecting AITU's innovative spirit.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title font-alt"><a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#support3">3. How can I purchase items from the web store?</a></h4>
+                    </div>
+                    <div class="panel-collapse collapse" id="support3">
+                      <div class="panel-body">To purchase items, simply browse the store, add products to your cart, and proceed to checkout. You can create an account for a smoother experience, but guest checkout is also available.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title font-alt"><a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#support4">4. Does the AITU web store ship internationally?</a></h4>
+                    </div>
+                    <div class="panel-collapse collapse" id="support4">
+                      <div class="panel-body">Yes, the AITU web store offers international shipping. Delivery times and shipping costs depend on your location and will be calculated during checkout.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <h4 class="font-alt mb-30">Our Expertises</h4>
+                <h6 class="font-alt"><span class="icon-tools-2"></span> Quality
+                </h6>
+                <div class="progress">
+                  <div class="progress-bar pb-dark" aria-valuenow="80" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span class="font-alt"></span></div>
+                </div>
+                <h6 class="font-alt"><span class="icon-strategy"></span> Branding
+                </h6>
+                <div class="progress">
+                  <div class="progress-bar pb-dark" aria-valuenow="80" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span class="font-alt"></span></div>
+                </div>
+                <h6 class="font-alt"><span class="icon-target"></span> Marketing
+                </h6>
+                <div class="progress">
+                  <div class="progress-bar pb-dark" aria-valuenow="50" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span class="font-alt"></span></div>
+                </div>
+                <h6 class="font-alt"><span class="icon-camera"></span> Photography
+                </h6>
+                <div class="progress">
+                  <div class="progress-bar pb-dark" aria-valuenow="90" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span class="font-alt"></span></div>
+                </div>
+                <h6 class="font-alt"><span class="icon-pencil"></span> Designing
+                </h6>
+                <div class="progress">
+                  <div class="progress-bar pb-dark" aria-valuenow="70" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span class="font-alt"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="module bg-dark-60 pt-0 pb-0 parallax-bg testimonial" data-background="{% static 'images\aitu_front.jpg' %}">
+          <div class="testimonials-slider pt-140 pb-140">
+            <ul class="slides">
+              <li>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="module-icon"><span class="icon-quote"></span></div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                      <blockquote class="testimonial-text font-alt">"AITU is where innovation meets ambition, shaping the tech leaders of tomorrow."</blockquote>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4 col-sm-offset-4">
+                      <div class="testimonial-author">
+                        <div class="testimonial-caption font-alt">
+                          <div class="testimonial-title">ChatGPT</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li >
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="module-icon"><span class="icon-quote"></span></div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                      <blockquote class="testimonial-text font-alt">"At AITU, dreams are coded into reality, and every challenge is a stepping stone to greatness."</blockquote>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4 col-sm-offset-4">
+                      <div class="testimonial-author">
+                        <div class="testimonial-caption font-alt">
+                          <div class="testimonial-title">Jim Stone</div>
+                          <div class="testimonial-descr">SomeCompany INC, CEO</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="module-icon"><span class="icon-quote"></span></div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                      <blockquote class="testimonial-text font-alt">I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.</blockquote>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4 col-sm-offset-4">
+                      <div class="testimonial-author">
+                        <div class="testimonial-caption font-alt">
+                          <div class="testimonial-title">Adele Snow</div>
+                          <div class="testimonial-descr">SomeCompany INC, CEO</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+        <section class="module" id="contact">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-6 col-sm-offset-3">
+                <h2 class="module-title font-alt">Contact us</h2>
+                <div class="module-subtitle font-serif"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-8">
+                <form id="contactForm" role="form" method="post" action="php/contact.php">
+                  <div class="form-group">
+                    <label class="sr-only" for="name">Name</label>
+                    <input class="form-control" type="text" id="name" name="name" placeholder="Your Name*" required="required" data-validation-required-message="Please enter your name."/>
+                    <p class="help-block text-danger"></p>
+                  </div>
+                  <div class="form-group">
+                    <label class="sr-only" for="email">Email</label>
+                    <input class="form-control" type="email" id="email" name="email" placeholder="Your Email*" required="required" data-validation-required-message="Please enter your email address."/>
+                    <p class="help-block text-danger"></p>
+                  </div>
+                  <div class="form-group">
+                    <textarea class="form-control" rows="7" id="message" name="message" placeholder="Your Message*" required="required" data-validation-required-message="Please enter your message."></textarea>
+                    <p class="help-block text-danger"></p>
+                  </div>
+                  <div class="text-center">
+                    <button class="btn btn-block btn-round btn-d" id="cfsubmit" type="submit">Submit</button>
+                  </div>
+                </form>
+                <div class="ajax-response font-alt" id="contactFormResponse"></div>
+              </div>
+              <div class="col-sm-4">
+                <div class="alt-features-item mt-0">
+                  <div class="alt-features-icon"><span class="icon-megaphone"></span></div>
+                  <h3 class="alt-features-title font-alt">Where to meet</h3>AITU<br/>Mangylyk el 22<br/>Astana city
+                </div>
+                <div class="alt-features-item mt-xs-60">
+                  <div class="alt-features-icon"><span class="icon-map"></span></div>
+                  <h3 class="alt-features-title font-alt">Say Hello</h3>Email: somecompany@example.com<br/>Phone: +1 234 567 89 10
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div class="module-small bg-dark">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="widget">
+                  <h5 class="widget-title font-alt">About AITU</h5>
+                  <p>The languages only differ in their grammar, their pronunciation and their most common words.</p>
+                  <p>Phone: +1 234 567 89 10</p>Fax: +1 234 567 89 10
+                  <p>Email:<a href="#">somecompany@example.com</a></p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="widget">
+                  <h5 class="widget-title font-alt">Recent Comments</h5>
+                  <ul class="icon-list">
+                    <li>Maria on <a href="#">Designer Desk Essentials</a></li>
+                    <li>John on <a href="#">Realistic Business Card Mockup</a></li>
+                    <li>Andy on <a href="#">Eco bag Mockup</a></li>
+                    <li>Jack on <a href="#">Bottle Mockup</a></li>
+                    <li>Mark on <a href="#">Our trip to the Alps</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="widget">
+                  <h5 class="widget-title font-alt">Blog Categories</h5>
+                  <ul class="icon-list">
+                    <li><a href="#">Photography - 7</a></li>
+                    <li><a href="#">Web Design - 3</a></li>
+                    <li><a href="#">Illustration - 12</a></li>
+                    <li><a href="#">Marketing - 1</a></li>
+                    <li><a href="#">Wordpress - 16</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="widget">
+                  <h5 class="widget-title font-alt">Popular Posts</h5>
+                  <ul class="widget-posts">
+                    <li class="clearfix">
+                      <div class="widget-posts-image"><a href="#"><img src="assets/images/rp-1.jpg" alt="Post Thumbnail"/></a></div>
+                      <div class="widget-posts-body">
+                        <div class="widget-posts-title"><a href="#">Designer Desk Essentials</a></div>
+                        <div class="widget-posts-meta">23 january</div>
+                      </div>
+                    </li>
+                    <li class="clearfix">
+                      <div class="widget-posts-image"><a href="#"><img src="assets/images/rp-2.jpg" alt="Post Thumbnail"/></a></div>
+                      <div class="widget-posts-body">
+                        <div class="widget-posts-title"><a href="#">Realistic Business Card Mockup</a></div>
+                        <div class="widget-posts-meta">15 February</div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </section>    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>    
-    <script type="module" src="{% static 'js/3d.js' %}"></script>
-    <script type="module" src="{% static 'js/3d2.js' %}"></script>
-{% endblock content %}
+        <hr class="divider-d">
+        <footer class="footer bg-dark">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-6">
+                <p class="copyright font-alt">&copy; 2024&nbsp;<a href="index.html">AITU</a>, All Rights Reserved</p>
+              </div>
+              <div class="col-sm-6">
+                <div class="footer-social-links"><a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-dribbble"></i></a><a href="#"><i class="fa fa-skype"></i></a>
+                </div>
+                sh0n_n <a href="https://github.com/shon-nuri"><i class="fa fa-github"></i></a>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+      <div class="scroll-up"><a href="#totop"><i class="fa fa-angle-double-up"></i></a></div>
+    </main>
+    <!--  
+    JavaScripts
+    =============================================
+    -->
+    <script src="{% static 'assets/lib/jquery/dist/jquery.js' %}"></script>
+    <script src="{% static 'assets/lib/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/lib/wow/dist/wow.js' %}"></script>
+    <script src="{% static 'assets/lib/jquery.mb.ytplayer/dist/jquery.mb.YTPlayer.js' %}"></script>
+    <script src="{% static 'assets/lib/isotope/dist/isotope.pkgd.js' %}"></script>
+    <script src="{% static 'assets/lib/imagesloaded/imagesloaded.pkgd.js' %}"></script>
+    <script src="{% static 'assets/lib/flexslider/jquery.flexslider.js' %}"></script>
+    <script src="{% static 'assets/lib/owl.carousel/dist/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'assets/lib/smoothscroll.js' %}"></script>
+    <script src="{% static 'assets/lib/magnific-popup/dist/jquery.magnific-popup.js' %}"></script>
+    <script src="{% static 'assets/lib/simple-text-rotator/jquery.simple-text-rotator.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+  </body>
+</html>

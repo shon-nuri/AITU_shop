@@ -1,26 +1,27 @@
+/* General Styling */
 body, html {
     margin: 0;
-    height: 100dvh;
-    background-color: hsl(0, 0%, 98%);
-    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
     overflow-x: hidden;
-    width: 100%; 
-}
-.wrapper {
     height: 100%;
-}
-.content {
-    flex: 1;
 }
 
 footer {
-    background-color: #4A8D91; 
-    color: white;
-    padding: 1rem;
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
 }
 
 h1,h2,h3,h4,h5,h6 {
     color: hsl(0, 0%, 30%);
+}
+
+a {
+    text-decoration: none;
 }
 
 #logo, #username {
@@ -47,14 +48,12 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .bg-dark {
-    background-color: #609fa7!important;
+    background-color: #000 !important;
 }
 
-#cart-icon {
-    width: 25px;
-    position: relative;
-    display: inline-block;
-    margin-left: 15px;
+/* Sidebar Hidden */
+.hidden {
+    display: none !important;
 }
 
 #cart-total {
@@ -117,118 +116,84 @@ h1,h2,h3,h4,h5,h6 {
     opacity: .6;
 }
 
-.hidden {
-    display: none!important;
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 10px;
+    background-color: #fff;
+    transition: transform 0.3s ease;
 }
 
-a {
-    text-decoration: none;
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.hero-section {
-    background-size: cover;
-    background-position: center;
-    background-color: #333;
-    height: 80vh;
-    color: rgb(253, 253, 253);
+.card .img-wrapper {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+}
+
+.card .img-wrapper img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.btn {
+    border-radius: 20px;
+}
+
+.row {
     display: flex;
     justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-}
-
-.hero-text {
-    background: rgba(0, 0, 0, 0.6); 
-    padding: 20px;
+    align-items: start;
 }
 
 .product-card {
-    transition: transform 0.3s;
+    margin-bottom: 30px;
 }
-
-.product-card:hover {
-    transform: scale(1.05);
-}
-
-.typing-effect {
-    font-family: monospace;
-    white-space: nowrap;
-    overflow: hidden;
-    border-right: 3px solid;
-    width: 0;
-    animation: typing 3s steps(50, end) forwards, blink-caret 0.5s step-end infinite;
-}
-
-@keyframes typing {
-    from { width: 0; }
-    to { width: 100%; }
-}
-
-@keyframes blink-caret {
-    50% { border-color: transparent; }
-}
-
-/* Set initial style for the sliding text */
-.hero-image {
-    position: relative;
-    animation: slideIn 1s ease-out forwards; /* Trigger the animation */
-    opacity: 0; /* Start hidden for a smooth transition */
-}
-
-/* Define the slide-in animation */
-@keyframes slideIn {
-    0% {
-        transform: translateX(-100%); /* Start off-screen to the left */
-        opacity: 0;
-    }
-    100% {
-        transform: translateX(0); /* End position */
-        opacity: 1;
-    }
-}
-
-.photo-container {
-    width: 100vw;
-    margin-left: calc(50% - 49vw);
-    overflow-x: hidden;
-}
-
+/* Grid and Images */
 .grid-item {
     height: 40vh;
-    background-image: url('static/images/aitu_hoodie.jpg')
-    background-size 100% 100%;
+    background-image: url('static/images/aitu_hoodie.jpg');
+    background-size: 100% 100%;
 }
 
-.container-fluid  {
-    width:  100% !important;
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0; /* Removes gap */
 }
 
-/* Sidebar styling */
 #sidebar {
-    position: absolute; /* Stick to the left */
+    min-width: 150px;
+    position: sticky;
     top: 0;
-    left: 0;
-    width: 18%; /* Adjust width as needed */
-    height: 100vh; /* Full height */
-    z-index: 1000; /* Ensure it's above the content */
-    background-color: #343a40; /* Dark background */
-  }
-  
-  /* Ensure content respects sidebar */
-  .col.py-3 {
-    margin-left: 18%; /* Match sidebar width */
-    transition: margin-left 0.3s ease-in-out; /* Smooth transition */
-  }
-
-#sidebar-items {
-    a{
-        color: #fff;
-    }
-    a:hover {
-        color: #000;
-        background-color: #fff;
-    }
+    height: 100dvh;
+    background: #333;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Full viewport height */
 }
 
+/* Allow the main content to grow and push the footer */
+main {
+    flex: 1;
+}
