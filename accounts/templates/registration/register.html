@@ -3,57 +3,59 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<div class="container auth-container">
-    <div class="auth-card p-4">
+<div class="container auth-container d-flex justify-content-center align-items-center mt-5">
+    <div class="card shadow p-4" style="max-width: 500px; width: 100%;">
         <h2 class="text-center mb-4 text-primary">Create Account</h2>
         <p class="text-center text-muted mb-4">Sign up for a new account</p>
 
         <form method="post">
             {% csrf_token %}
             
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
-                    {{ form.first_name|add_class:"form-control" }}
-                    {% if form.first_name.errors %}
-                    <div class="text-danger small">
-                        {{ form.first_name.errors|join:", " }}
-                    </div>
-                    {% endif %}
-                </div>
-                
-                <div class="col-md-6 mb-3">
-                    <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
-                    {{ form.last_name|add_class:"form-control" }}
-                    {% if form.last_name.errors %}
-                    <div class="text-danger small">
-                        {{ form.last_name.errors|join:", " }}
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            {% for field in form.visible_fields %}
-            {% if field.name not in excluded_fields %}
+            <!-- Username -->
             <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label">
-                    {{ field.label }}
-                </label>
-                {{ field|add_class:"form-control" }}
-                {% if field.errors %}
+                <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                {{ form.username|add_class:"form-control" }}
+                {% if form.username.errors %}
                 <div class="text-danger small">
-                    {{ field.errors|join:", " }}
-                </div>
-                {% endif %}
-                {% if field.help_text %}
-                <div class="form-text">
-                    {{ field.help_text }}
+                    {{ form.username.errors|join:", " }}
                 </div>
                 {% endif %}
             </div>
-            {% endif %}
-            {% endfor %}
 
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                {{ form.email|add_class:"form-control" }}
+                {% if form.email.errors %}
+                <div class="text-danger small">
+                    {{ form.email.errors|join:", " }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="{{ form.password1.id_for_label }}" class="form-label">Password</label>
+                {{ form.password1|add_class:"form-control" }}
+                {% if form.password1.errors %}
+                <div class="text-danger small">
+                    {{ form.password1.errors|join:", " }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-3">
+                <label for="{{ form.password2.id_for_label }}" class="form-label">Confirm Password</label>
+                {{ form.password2|add_class:"form-control" }}
+                {% if form.password2.errors %}
+                <div class="text-danger small">
+                    {{ form.password2.errors|join:", " }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Terms and Conditions -->
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="terms" required>
                 <label class="form-check-label" for="terms">
@@ -64,9 +66,11 @@
                 </label>
             </div>
 
+            <!-- Submit Button -->
             <button type="submit" class="btn btn-primary w-100 mb-3">Create Account</button>
         </form>
 
+        <!-- Sign In Link -->
         <p class="text-center mb-0">
             Already have an account? 
             <a href="{% url 'login' %}" class="text-primary text-decoration-none">Sign in</a>

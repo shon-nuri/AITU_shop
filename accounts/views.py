@@ -50,20 +50,27 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'registration/password_reset_complete.html'
 
+from django.contrib.auth import login
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .forms import CustomUserCreationForm
+
 def register_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            # Explicitly set the authentication backend to Django's default
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, "Registration successful.")
             return redirect('index')
-        messages.error(request, "Registration failed. Please correct the errors.")
+        else:
+            messages.error(request, "Registration failed. Please correct the errors.")
     else:
         form = CustomUserCreationForm()
-    excluded_fields = ['first_name', 'last_name','email', 'password']
+    
     context = {
         'form': form,
-        'excluded_fields': excluded_fields,
     }
     return render(request, 'registration/register.html', context)
+
